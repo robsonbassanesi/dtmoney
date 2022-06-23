@@ -3,11 +3,11 @@ import imgLogo from '../../assets/logo.svg'
 
 export function Header() {
   return (
-    <div className={styles.header}>
+    <header className={styles.header}>
       <div className={styles.headerComponents}>
         <img src={imgLogo} alt="logo dtmoney" />
         <button type="button">Nova transação</button>
       </div>
-    </div>
+    </header>
   )
 }
