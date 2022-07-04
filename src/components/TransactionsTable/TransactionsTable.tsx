@@ -1,6 +1,8 @@
-import styles from './TransactionsTable.module.scss'
+import styles from './TransactionsTable.module.scss';
+import { useTransactions } from '../../hooks/useTransactions';
 
 export function TransactionsTable() {
+  const { transactions } = useTransactions();
   return (
     <div className={styles.transactionsTable}>
       <table>
@@ -13,21 +15,33 @@ export function TransactionsTable() {
           </tr>
         </thead>
         <tbody>
-          <tr >
-            <td>Desenvolvimento de site</td>
-            <td className={styles.deposit}>R$12.000</td>
-            <td>dev</td>
-            <td>12/05/2022</td>
-          </tr>
-          <tr >
-            <td>Desenvolvimento de site</td>
-            <td className={styles.withdraw}>-R$12.000</td>
-            <td>dev</td>
-            <td>12/05/2022</td>
-          </tr>
-
+          {transactions.map(transaction => {
+            return (
+              <tr key={transaction.id}>
+                <td>{transaction.title}</td>
+                <td
+                  className={
+                    transaction.type === 'deposit'
+                      ? styles.deposit
+                      : styles.withdraw
+                  }
+                >
+                  {new Intl.NumberFormat('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                  }).format(transaction.amount)}
+                </td>
+                <td>{transaction.category}</td>
+                <td>
+                  {new Intl.DateTimeFormat('pt-BR').format(
+                    new Date(transaction.createdAt)
+                  )}
+                </td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
-  )
+  );
 }
