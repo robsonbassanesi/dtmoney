@@ -1,8 +1,32 @@
 import styles from './TransactionsTable.module.scss';
 import { useTransactions } from '../../hooks/useTransactions';
+import { FaTrashAlt } from 'react-icons/fa';
+import axios from 'axios';
+
+function deleteTransaction(id: number) {
+  console.log(id);
+  let url = 'http://127.0.0.1:5000/transaction?transaction_id=' + id;
+  fetch(url, {
+    method: 'delete'
+  })
+    .then(response => response.json())
+    .catch(error => {
+      console.error('Error:', error);
+    });
+}
+
+function reloadWindow() {
+  window.location.reload();
+}
+
+function clickFunction(id: number) {
+  reloadWindow();
+  deleteTransaction(id);
+}
 
 export function TransactionsTable() {
   const { transactions } = useTransactions();
+
   return (
     <div className={styles.transactionsTable}>
       <table>
@@ -37,6 +61,14 @@ export function TransactionsTable() {
                     new Date(transaction.createdAt)
                   )}
                 </td>
+                <td>
+                  <button
+                    id="trash"
+                    onClick={() => clickFunction(transaction.id)}
+                  >
+                    <FaTrashAlt size={20} />
+                  </button>
+                </td>
               </tr>
             );
           })}
@@ -45,3 +77,13 @@ export function TransactionsTable() {
     </div>
   );
 }
+// function deleteTransaction(arg0: {
+//   title: any;
+//   amount: any;
+//   category: any;
+//   type: any;
+//   id: number;
+//   createdAt: string;
+// }) {
+//   throw new Error('Function not implemented.');
+// }

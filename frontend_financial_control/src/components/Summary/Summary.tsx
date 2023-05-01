@@ -5,8 +5,11 @@ import { useTransactions } from '../../hooks/useTransactions';
 
 import styles from './Summary.module.scss';
 
+// função para cálculo de entradas, saídas e saldo.
+
 export function Summary() {
   const { transactions } = useTransactions();
+  // console.log(useTransactions);
 
   const Summary = transactions.reduce(
     (acc, transaction) => {

@@ -1,3 +1,4 @@
+import axios from 'axios';
 import {
   createContext,
   ReactNode,
@@ -20,7 +21,8 @@ type TransactionInput = Omit<Transaction, 'id' | 'createdAt'>;
 
 interface TransactionsContextData {
   transactions: Transaction[];
-  createTransaction: (transaction: TransactionInput) => Promise<void>;
+  createTransaction: (transaction: Transaction) => Promise<void>;
+  // deleteTransaction: (id: Transaction) => void;
 }
 
 interface TransactionsProviderProps {
@@ -32,21 +34,29 @@ const TransactionsContext = createContext<TransactionsContextData>(
 );
 
 export function TransactionsProvider({ children }: TransactionsProviderProps) {
+  //função para coletar dados da API
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   useEffect(() => {
     api
-      .get('transactions')
+      .get('/transactions')
       .then(response => setTransactions(response.data.transactions));
   }, []);
 
-  async function createTransaction(transactionInput: TransactionInput) {
-    const response = await api.post('/transactions', {
-      ...transactionInput,
-      createdAt: new Date()
-    });
-    const { transaction } = response.data;
+  //função para enviar e registrar nova transação através da API, nesse caso foi necessário converter os dados de json para formulário.
 
-    setTransactions([...transactions, transaction]);
+  async function createTransaction(transactionInput: Transaction) {
+    const formData = new FormData();
+    formData.append('title', transactionInput.title);
+    formData.append('amount', transactionInput.amount);
+    formData.append('category', transactionInput.category);
+    formData.append('type', transactionInput.type);
+
+    axios
+      .post('http://127.0.0.1:5000/transaction', formData)
+      .then(response => console.log(formData))
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   return (

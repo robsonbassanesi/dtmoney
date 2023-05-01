@@ -21,6 +21,8 @@ export function NewTransactionModal({
   const [category, setCategory] = useState('');
   const [value, setValue] = useState(0);
 
+  //Função para criar uma nova transação.
+
   async function handleCreateNewTransaction(event: FormEvent) {
     event.preventDefault();
 
@@ -28,7 +30,9 @@ export function NewTransactionModal({
       title,
       amount: value,
       category,
-      type
+      type,
+      id: 0,
+      createdAt: ''
     });
 
     setTitle('');
@@ -37,6 +41,10 @@ export function NewTransactionModal({
     setType('');
 
     onRequestClose();
+  }
+
+  function reloadWindow() {
+    window.location.reload();
   }
   return (
     <Modal
@@ -52,6 +60,9 @@ export function NewTransactionModal({
       >
         <img src={closeImg} alt="fechar modal" />
       </button>
+
+      {/*formulário para coletar informações de novas transações  */}
+
       <form className={styles.form} onSubmit={handleCreateNewTransaction}>
         <h2>Cadastrar transação</h2>
         <input
@@ -92,7 +103,9 @@ export function NewTransactionModal({
           value={category}
           onChange={event => setCategory(event.target.value)}
         />
-        <button type="submit">Cadastrar</button>
+        <button type="submit" onClick={reloadWindow}>
+          Cadastrar
+        </button>
       </form>
     </Modal>
   );
